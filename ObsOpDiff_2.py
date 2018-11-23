@@ -10,8 +10,8 @@ w   =np.arange(wmin,wmax+1,1) #m/s
 
 theta= 0.      # deg (90 = North; 180 = West)
 alphamax=20.    # deg
-alphamin=0.0    # deg
-alpha = np.arange(alphamin,alphamax+0.5,0.5) # deg
+alphamin=0.    # deg
+alpha = np.arange(alphamin,alphamax+0.01,0.01) # deg
 
 
 # By default, the np trig library assumes radians. Convert degrees to radians.
@@ -28,22 +28,22 @@ for a in range(len(alpha)):
     costilt[a]= np.cos(alpha[a])
     sintilt[a]= np.sin(alpha[a])
 
-Vr  = np.zeros(shape=(len(w),len(alpha)))   # initialize to zeros.
-Vrw = np.zeros(shape=(len(w),len(alpha)))   # initialize to zeros.
+#Vr  = np.zeros(shape=(len(w),len(alpha)))   # initialize to zeros.
+#Vrw = np.zeros(shape=(len(w),len(alpha)))   # initialize to zeros.
+Vrdiff = np.zeros(shape=(len(w),len(alpha)))   # initialize to zeros.
 
 for j in range(len(alpha)):
     for i in range(len(w)):
 # Ob operators.
-        Vr[i,j]  = u*cosanzm*costilt[j] + v*sinanzm*costilt[j] 
-        Vrw[i,j] = u*cosanzm*costilt[j] + v*sinanzm*costilt[j] + (w[i]        )*sintilt[j]
+#        Vr[i,j]  = u*cosanzm*costilt[j] + v*sinanzm*costilt[j] 
+#        Vrw[i,j] = u*cosanzm*costilt[j] + v*sinanzm*costilt[j] + (w[i]        )*sintilt[j]
+         Vrdiff[i,j]=-1*(w[i]        )*sintilt[j]
 
 # Make the plot.
-diff=Vr  -Vrw
+#diff=Vr  -Vrw
+diff=Vrdiff
 
-#plt.figure(figsize=(13.125*1.5,10.5/2.3))
-#plt.figure(figsize=(13.125*1.5*0.85,10.5/2.3))
 plt.figure(figsize=(15,11))
-#plt.figure(figsize=(10,20))
 
 inc=1.
 lev=15.
@@ -56,7 +56,7 @@ title_fontsize=22
 clabel_fontsize=16
 xy_label_fontsize=20
 
-#Plot 3
+#Plot 1
 ax3=plt.subplot(1,1,1)
 plt.title(r'$Vr (u,v) - Vr (u,v,w) = -w sin(\alpha)$',fontsize=title_fontsize)
 cs1=plt.contourf(np.degrees(alpha),w,diff,clevsdiff,cmap='coolwarm',extend='both')
@@ -75,7 +75,6 @@ plt.tight_layout()
 plt.subplots_adjust(top=0.93)
 plt.suptitle("Doppler Radial Wind Observation Operator Differences",fontsize=fig_title_fontsize,x=0.5, y=1.00)
 plt.savefig('./ObsOpDiff_2.png',bbox_inches='tight')
-#plt.show()
    
 
 
